@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sample-app-service
-  namespace: sample-app
+  namespace: argocd-s
   labels:
     app: sample-app
 spec:
