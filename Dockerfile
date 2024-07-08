@@ -1,7 +1,7 @@
 FROM php:8.0-apache
 
 # กำหนดค่าไดเรกทอรีสำหรับรันเว็บไซต์
-WORKDIR /var/www/html
+WORKDIR /var/www/html/ohm
 
 # คัดลอกไฟล์โค้ดแอปพลิเคชัน PHP ไปยังไดเรกทอรีที่กำหนด
 COPY . .

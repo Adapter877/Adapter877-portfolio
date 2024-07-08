@@ -10,7 +10,7 @@ spec:
   - host: ohm.dev.co.th
     http:
       paths:
-      - path: /
+      - path: /ohm
         pathType: Prefix
         backend:
           service:
