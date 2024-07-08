@@ -17,6 +17,3 @@ spec:
             name: sample-app-service
             port:
               number: 80
-  tls:
-  - hosts:
-    - ohm.dev.co.th
