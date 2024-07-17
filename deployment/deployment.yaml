@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: sample-app
-        image: ghcr.io/adapter877/borrow-1:main
+        image: docker pull ghcr.io/adapter877/borrow-sci:main
         ports:
         - containerPort: 80
         resources:
