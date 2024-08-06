@@ -2,12 +2,11 @@ name: Deploy-Dev
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 env:
-  # ใช้ ghcr.io สำหรับ GitHub Container Registry
   REGISTRY: ghcr.io
-  # github.repository เป็น <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -24,38 +23,23 @@ jobs:
         uses: actions/checkout@v3
 
       # ตั้งค่า Docker buildx
-      - name: Setup Docker buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       # เข้าสู่ระบบ GitHub Container Registry
-      - name: Log into GitHub Container Registry
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # สกัดข้อมูลเมตาดาต้า (แท็ก, ป้าย) สำหรับ Docker
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
+      # สร้าง Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
 
-      # สร้างและผลักดัน Docker image
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      # ตรวจสอบสถานะ Docker (สำหรับการดีบัก)
-      - name: Check Docker version
-        run: docker --version
-
-      - name: Check Docker info
-        run: docker info
+      # ผลักดัน Docker image ไปยัง GitHub Container Registry
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
