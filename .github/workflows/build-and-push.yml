@@ -7,7 +7,7 @@ on:
 env:
   # ใช้ ghcr.io สำหรับ GitHub Container Registry
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
+  # github.repository เป็น <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -19,14 +19,15 @@ jobs:
       id-token: write
 
     steps:
+      # เช็คเอาท์โค้ดจากรีโป
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Setup Docker buildx
+      # ตั้งค่า Docker buildx
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
 
-      # Login to GitHub Container Registry
+      # เข้าสู่ระบบ GitHub Container Registry
       - name: Log into GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -34,7 +35,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
+      # สกัดข้อมูลเมตาดาต้า (แท็ก, ป้าย) สำหรับ Docker
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -43,7 +44,7 @@ jobs:
           tags: |
             type=ref,event=branch
 
-      # Build and push Docker image
+      # สร้างและผลักดัน Docker image
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -51,3 +52,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      # ตรวจสอบสถานะ Docker (สำหรับการดีบัก)
+      - name: Check Docker version
+        run: docker --version
+
+      - name: Check Docker info
+        run: docker info
