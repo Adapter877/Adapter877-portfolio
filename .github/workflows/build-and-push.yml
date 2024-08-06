@@ -1,4 +1,4 @@
-name: Test Runner
+name: Test Docker Access
 
 on:
   push:
@@ -12,20 +12,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Display system information
-        run: |
-          echo "System Information:"
-          uname -a
-          echo "Disk Usage:"
-          df -h
-          echo "Free Memory:"
-          free -h
-
-      - name: Check Docker version
-        run: docker --version
-
       - name: Check Docker info
-        run: docker info
-
-      - name: Test echo command
-        run: echo "GitHub Actions Runner is working!"
+        run: sudo docker info
